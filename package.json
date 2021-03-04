@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -21,15 +23,15 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.0.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "env-cmd -f .env.local react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy-prod": "env-cmd -f .env.production react-scripts build && aws s3 sync build/ s3://backoffice.pitachip.biz --acl public-read --profile pitachip-rend",
+    "deploy-dev": "env-cmd -f .env.development react-scripts build && aws s3 sync build/ s3://dev-backoffice.pitachip.biz --acl public-read --profile pitachip-rend"
   },
   "eslintConfig": {
     "extends": [
