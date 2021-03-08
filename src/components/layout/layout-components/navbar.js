@@ -1,5 +1,4 @@
 //libs
-import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 //ui components
@@ -40,26 +39,23 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const NavBar = () => {
+const NavBar = ({ openDrawer, isOpen }) => {
 	const classes = useStyles();
-	const [open, setOpen] = useState(true);
-
-	const handleDrawerOpen = () => {
-		setOpen(true);
-	};
-
 	return (
 		<AppBar
 			position="absolute"
-			className={clsx(classes.appBar, open && classes.appBarShift)}
+			className={clsx(classes.appBar, isOpen && classes.appBarShift)}
 		>
 			<Toolbar className={classes.toolbar}>
 				<IconButton
 					edge="start"
 					color="inherit"
 					aria-label="open drawer"
-					onClick={handleDrawerOpen}
-					className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+					onClick={openDrawer}
+					className={clsx(
+						classes.menuButton,
+						isOpen && classes.menuButtonHidden
+					)}
 				>
 					<MenuIcon />
 				</IconButton>

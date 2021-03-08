@@ -8,7 +8,6 @@ const PrivateRoute = ({
 	isLoading,
 	...props
 }) => {
-	console.log("Is Auth: ", isAuthenticated, "Is loading: ", isLoading);
 	if ((isLoading && !isAuthenticated) || (isAuthenticated && isLoading)) {
 		return <div>Loading...</div>;
 	} else if (!isLoading && !isAuthenticated) {
