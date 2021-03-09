@@ -1,10 +1,12 @@
-import React from "react";
+//ui components
 import { Box } from "@material-ui/core";
+//app components
+import StatusTabs from "./statusTabs";
 
 const OrderContainer = () => {
 	return (
 		<Box>
-			<p>Order Container</p>
+			<StatusTabs />
 		</Box>
 	);
 };

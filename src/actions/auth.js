@@ -22,18 +22,27 @@ export const signInWithEmailAndPassword = (email, password) => async (
 				headers: { Authorization: `Bearer ${userToken.token}` },
 			});
 			metaData = userMetaData.data.metaData;
+			dispatch({
+				type: "SET_USER",
+				payload: {
+					user: signInAttempt.user,
+					metaData: metaData,
+					authLoading: false,
+					message: "",
+					showAuthMessage: false,
+				},
+			});
+
 			history.push("/");
+		} else if (!userAuthorized) {
+			dispatch({
+				type: "SET_AUTH_MESSAGE",
+				payload: {
+					message: "Not Authorized",
+					showAuthMessage: true,
+				},
+			});
 		}
-		dispatch({
-			type: "SET_USER",
-			payload: {
-				user: signInAttempt.user,
-				metaData: metaData,
-				authLoading: false,
-				message: "",
-				showAuthMessage: false,
-			},
-		});
 	} catch (error) {
 		const errorMessage = createErrorMessage(error.code);
 
@@ -42,6 +51,47 @@ export const signInWithEmailAndPassword = (email, password) => async (
 			payload: {
 				message: errorMessage,
 				showAuthMessage: true,
+			},
+		});
+	}
+};
+
+export const logout = () => async () => {
+	try {
+		await auth.signOut();
+		history.push("/login");
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const authStateChanged = (user) => async (dispatch) => {
+	let metaData = {};
+	if (user) {
+		const userToken = await getUserToken();
+		const userMetaData = await pitachip.get("/user/", {
+			headers: { Authorization: `Bearer ${userToken.token}` },
+		});
+		metaData = userMetaData;
+		dispatch({
+			type: "SET_USER",
+			payload: {
+				user: user,
+				metaData: metaData.data ? metaData.data.metaData : {},
+				authLoading: false,
+				errorMessage: "",
+				showAuthErrorMessage: false,
+			},
+		});
+	} else {
+		dispatch({
+			type: "SET_USER",
+			payload: {
+				user,
+				metaData,
+				authLoading: false,
+				errorMessage: "",
+				showAuthErrorMessage: false,
 			},
 		});
 	}

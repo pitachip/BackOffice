@@ -7,6 +7,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
+//app components
+import AccountDropdown from "./accountDropdown";
 //styles
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -68,6 +70,7 @@ const NavBar = ({ openDrawer, isOpen }) => {
 				>
 					Pita Chip Back Office
 				</Typography>
+				<AccountDropdown />
 			</Toolbar>
 		</AppBar>
 	);

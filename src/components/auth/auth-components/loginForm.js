@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //ui components
-import MuiAlert from "@material-ui/lab/Alert";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -13,6 +12,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Snackbar from "@material-ui/core/Snackbar";
+import CircularProgress from "@material-ui/core/CircularProgress";
+//app components
+import Alert from "../../common/alert";
 //actions
 import { signInWithEmailAndPassword, closeAuthMessage } from "../../../actions";
 
@@ -34,9 +36,16 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	loader: {
+		textAlign: "center",
+	},
 }));
 
 const LoginForm = () => {
+	/**
+	 * TODO
+	 * Make a button with loader, put it in common to be used everywhere
+	 */
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const auth = useSelector((state) => state.auth);
@@ -48,12 +57,34 @@ const LoginForm = () => {
 	const signInButtonClicked = async (e) => {
 		e.preventDefault();
 		setSigningIn(true);
-		dispatch(signInWithEmailAndPassword(email, password));
-		//setSigningIn(false);
+		await dispatch(signInWithEmailAndPassword(email, password));
+		setSigningIn(false);
 	};
 
 	const closeAlert = () => {
 		dispatch(closeAuthMessage());
+	};
+
+	const renderSignInButton = () => {
+		return (
+			<Button
+				type="submit"
+				fullWidth
+				variant="contained"
+				color="primary"
+				className={classes.submit}
+			>
+				Sign In
+			</Button>
+		);
+	};
+
+	const renderLoader = () => {
+		return (
+			<div className={classes.loader}>
+				<CircularProgress size={30} />
+			</div>
+		);
 	};
 
 	return (
@@ -96,16 +127,7 @@ const LoginForm = () => {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
-					<Button
-						type="submit"
-						fullWidth
-						pending={signingIn}
-						variant="contained"
-						color="primary"
-						className={classes.submit}
-					>
-						Sign In
-					</Button>
+					{!signingIn ? renderSignInButton() : renderLoader()}
 					<Grid container>
 						<Grid item xs>
 							<Link href="#" variant="body2">
@@ -116,11 +138,12 @@ const LoginForm = () => {
 				</form>
 				<Snackbar
 					open={auth.showAuthMessage}
-					autoHideDuration={6000}
 					onClose={closeAlert}
 					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
 				>
-					<MuiAlert elevation={6} variant="filled" />
+					<Alert onClose={closeAlert} severity="error">
+						{auth.authMessage}
+					</Alert>
 				</Snackbar>
 			</div>
 		</Container>
@@ -128,14 +151,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
-/**
- * 					<Snackbar
-						open={auth.showAuthMessage}
-						autoHideDuration={6000}
-						onClose={closeAlert}
-						anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-					>
-<MuiAlert elevation={6} variant="filled" {...props} />
-					</Snackbar>
- */
