@@ -14,9 +14,6 @@ export const getOrders = (page, filter) => async (dispatch) => {
 				headers: { Authorization: `Bearer ${userToken.token}` },
 			}
 		);
-
-		console.log("Order history pagination: ", orderHistory.pagination);
-
 		dispatch({
 			type: "SET_ORDER_HISTORY",
 			payload: {

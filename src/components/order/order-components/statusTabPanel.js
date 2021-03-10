@@ -1,32 +1,30 @@
 //libs
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //ui components
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+//app components
+import OrderTable from "./orderTable";
 //actions
 import { getOrders } from "../../../actions";
 
 const StatusTabPanel = ({ children, value, index, querystring }) => {
 	const dispatch = useDispatch();
-	const orders = useSelector((state) => state.order);
+	const orderHistory = useSelector((state) => state.order);
+	const [loading, setLoading] = useState(true);
 
-	/**
-	 * TODO
-	 * load the data based on the
-	 * query string that is passed in and then pass that data to a table
-	 */
 	useEffect(() => {
 		if (value === index) {
 			dispatch(getOrders(1, querystring));
+			setLoading(false);
 		}
-	}, [value]);
+	}, [dispatch, index, querystring, value]);
 
 	return (
 		<div role="tabpanel" hidden={value !== index}>
 			{value === index && (
 				<Box p={3}>
-					<Typography>{children}</Typography>
+					<OrderTable orderHistory={orderHistory} loading={loading} />
 				</Box>
 			)}
 		</div>

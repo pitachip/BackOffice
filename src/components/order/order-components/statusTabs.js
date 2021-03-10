@@ -17,6 +17,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StatusTabs = () => {
+	/**
+	 * Come up with a better way to
+	 * render the tabs. Its a little redudant right now
+	 * and over renders
+	 */
 	const classes = useStyles();
 	const [value, setValue] = useState(0);
 
@@ -67,3 +72,7 @@ const StatusTabs = () => {
 };
 
 export default StatusTabs;
+
+/**
+ *
+ */
