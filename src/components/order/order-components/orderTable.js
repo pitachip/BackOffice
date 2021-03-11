@@ -9,7 +9,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
-import Pagination from "@material-ui/lab/Pagination";
 import Paper from "@material-ui/core/Paper";
 //app components
 import OrderActions from "./orderActions";
@@ -20,7 +19,13 @@ const useStyles = makeStyles({
 	},
 });
 
-const OrderTable = ({ orderHistory, loading }) => {
+const OrderTable = ({
+	orderHistory,
+	loading,
+	handlePageChange,
+	page,
+	handleRowsPerPageChange,
+}) => {
 	const classes = useStyles();
 
 	console.log(orderHistory.pagination);
@@ -103,11 +108,11 @@ const OrderTable = ({ orderHistory, loading }) => {
 			<TablePagination
 				component="div"
 				count={orderHistory.pagination.totalOrders}
-				page={0}
-				rowsPerPage={2}
-				onChangePage={(event, newPage) =>
-					console.log("Change page called: ", newPage)
-				}
+				rowsPerPageOptions={[5, 10, 25]}
+				page={page}
+				rowsPerPage={orderHistory.pagination.limit}
+				onChangePage={handlePageChange}
+				onChangeRowsPerPage={handleRowsPerPageChange}
 			/>
 		</Paper>
 	);

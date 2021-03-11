@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 //ui components
 import Box from "@material-ui/core/Box";
+import CircularProgress from "@material-ui/core/CircularProgress";
 //app components
 import OrderTable from "./orderTable";
 //actions
@@ -12,19 +13,53 @@ const StatusTabPanel = ({ children, value, index, querystring }) => {
 	const dispatch = useDispatch();
 	const orderHistory = useSelector((state) => state.order);
 	const [loading, setLoading] = useState(true);
+	const [page, setPage] = useState(0);
+	const [limit, setLimit] = useState(5);
 
 	useEffect(() => {
-		if (value === index) {
-			dispatch(getOrders(1, querystring));
-			setLoading(false);
-		}
-	}, [dispatch, index, querystring, value]);
+		const getInitalOrders = async () => {
+			if (value === index) {
+				setLoading(true);
+				await dispatch(getOrders(1, querystring, limit));
+				setLoading(false);
+				setPage(0);
+			}
+		};
+		getInitalOrders();
+	}, [dispatch, index, querystring, value, limit]);
 
-	return (
+	const handlePageChange = async (event, page) => {
+		setLoading(true);
+		await dispatch(getOrders(page + 1, querystring, limit));
+		setPage(page);
+		setLoading(false);
+	};
+
+	const handleRowsPerPageChange = async (event) => {
+		setLoading(true);
+		await dispatch(getOrders(1, querystring, event.target.value));
+		setLimit(event.target.value);
+		setPage(0);
+		setLoading(false);
+	};
+
+	return loading ? (
+		<div hidden={value !== index}>
+			<Box p={10}>
+				<CircularProgress />
+			</Box>
+		</div>
+	) : (
 		<div role="tabpanel" hidden={value !== index}>
 			{value === index && (
 				<Box p={3}>
-					<OrderTable orderHistory={orderHistory} loading={loading} />
+					<OrderTable
+						orderHistory={orderHistory}
+						loading={loading}
+						handlePageChange={handlePageChange}
+						page={page}
+						handleRowsPerPageChange={handleRowsPerPageChange}
+					/>
 				</Box>
 			)}
 		</div>
