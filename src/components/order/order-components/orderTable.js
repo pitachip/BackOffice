@@ -28,8 +28,6 @@ const OrderTable = ({
 }) => {
 	const classes = useStyles();
 
-	console.log(orderHistory.pagination);
-
 	const renderPaymentType = (paymentType) => {
 		switch (paymentType) {
 			case "cc":
@@ -75,7 +73,7 @@ const OrderTable = ({
 							<TableCell></TableCell>
 						</TableRow>
 					</TableHead>
-					<TableBody>
+					<TableBody stripedRows>
 						{orderHistory.orders.map((order) => (
 							<TableRow key={order._id}>
 								<TableCell>#{order.orderNumber}</TableCell>
@@ -98,7 +96,7 @@ const OrderTable = ({
 								</TableCell>
 								<TableCell>{order.orderDetails.shippingMethod}</TableCell>
 								<TableCell>
-									<OrderActions />
+									<OrderActions order={order} />
 								</TableCell>
 							</TableRow>
 						))}

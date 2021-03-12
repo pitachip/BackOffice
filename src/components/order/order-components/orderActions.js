@@ -1,21 +1,16 @@
 //libs
 import { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 //ui components
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-//styles
-const useStyles = makeStyles((theme) => ({
-	button: {
-		color: "black",
-	},
-}));
+//app components
+import ConfirmOrderModal from "../order-modals/confirmOrderModal";
 
-const OrderActions = () => {
-	const classes = useStyles();
+const OrderActions = ({ order }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [openModal, setOpenModal] = useState(false);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -23,6 +18,24 @@ const OrderActions = () => {
 
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+
+	const handleViewOrder = () => {
+		window.open(process.env.REACT_APP_SPECIALORDER_URL + "/view/" + order._id);
+	};
+
+	const handleModifyOrder = () => {
+		window.open(
+			process.env.REACT_APP_SPECIALORDER_URL + "/modify/" + order._id
+		);
+	};
+
+	const handleConfirmModalOpen = () => {
+		setOpenModal(true);
+	};
+
+	const handleConfirmModalClose = () => {
+		setOpenModal(false);
 	};
 
 	return (
@@ -41,14 +54,30 @@ const OrderActions = () => {
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
 			>
-				<MenuItem>Confirm Order</MenuItem>{" "}
-				{/**Only for order in "Submitted Status" */}
-				<MenuItem>View Order</MenuItem>
-				<MenuItem>Modify Order</MenuItem>{" "}
+				{/**Confirm Order */}
+				{order.status === "Submitted" ? (
+					<MenuItem onClick={handleConfirmModalOpen}>Confirm Order</MenuItem>
+				) : null}
+				{/**View Order */}
+				<MenuItem onClick={handleViewOrder}>View/Print Order</MenuItem>
+				{/**Modify Order */}
+				{order.status !== "Completed" && order.status !== "Cancelled" ? (
+					<MenuItem onClick={handleModifyOrder}>Modify Order</MenuItem>
+				) : null}
+				{/**Cancel order */}
+				{order.status !== "Completed" && order.status !== "Cancelled" ? (
+					<MenuItem>Cancel Order</MenuItem>
+				) : null}
+				{/**Add PO# */}
 				{/**Only if order is not in Completed or Cancelled status */}
 				<MenuItem>Add PO#</MenuItem> {/**If applicable */}
-				<MenuItem>Print Order</MenuItem>
 			</Menu>
+			<ConfirmOrderModal
+				openModal={openModal}
+				handleClose={handleConfirmModalClose}
+				orderNumber={order.orderNumber}
+				order={order}
+			/>
 		</div>
 	);
 };

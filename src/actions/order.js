@@ -25,3 +25,21 @@ export const getOrders = (page, filter, limit) => async (dispatch) => {
 		console.log(error);
 	}
 };
+
+export const updateOrder = (order) => async (dispatch) => {
+	try {
+		const userToken = await getUserToken();
+		const modifySpecialOrder = await pitachip.put(
+			`/specialorder/${order._id}`,
+			{
+				modifiedOrder: order,
+			},
+			{
+				headers: { Authorization: `Bearer ${userToken.token}` },
+			}
+		);
+		return modifySpecialOrder;
+	} catch (error) {
+		console.log(error);
+	}
+};

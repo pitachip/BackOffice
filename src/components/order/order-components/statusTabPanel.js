@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 //ui components
 import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@material-ui/core/Button";
+import RefreshIcon from "@material-ui/icons/Refresh";
 //app components
 import OrderTable from "./orderTable";
 //actions
@@ -43,6 +45,12 @@ const StatusTabPanel = ({ children, value, index, querystring }) => {
 		setLoading(false);
 	};
 
+	const handleTableRefresh = async () => {
+		setLoading(true);
+		await dispatch(getOrders(1, querystring, limit));
+		setLoading(false);
+	};
+
 	return loading ? (
 		<div hidden={value !== index}>
 			<Box p={10}>
@@ -53,6 +61,14 @@ const StatusTabPanel = ({ children, value, index, querystring }) => {
 		<div role="tabpanel" hidden={value !== index}>
 			{value === index && (
 				<Box p={3}>
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={handleTableRefresh}
+						endIcon={<RefreshIcon />}
+					>
+						Refresh Orders
+					</Button>
 					<OrderTable
 						orderHistory={orderHistory}
 						loading={loading}
