@@ -43,3 +43,23 @@ export const updateOrder = (order) => async (dispatch) => {
 		console.log(error);
 	}
 };
+
+export const cancelOrder = (orderId, paymentStatus) => async (dispatch) => {
+	try {
+		const userToken = await getUserToken();
+		const cancelSpecialOrder = await pitachip.delete(
+			`/specialorder/${orderId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${userToken.token}`,
+				},
+				data: {
+					paymentStatus: paymentStatus,
+				},
+			}
+		);
+		return cancelSpecialOrder;
+	} catch (error) {
+		return error;
+	}
+};

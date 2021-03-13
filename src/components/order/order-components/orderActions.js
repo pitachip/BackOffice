@@ -7,10 +7,14 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 //app components
 import ConfirmOrderModal from "../order-modals/confirmOrderModal";
+import CancelOrderModal from "../order-modals/cancelOrderModal";
+import AddPoNumberModal from "../order-modals/addPoNumberModal";
 
 const OrderActions = ({ order }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [openModal, setOpenModal] = useState(false);
+	const [openCancelOrderModal, setCancelOrderModal] = useState(false);
+	const [openAddPoNumberModal, setAddPoNumberModal] = useState(false);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -37,6 +41,24 @@ const OrderActions = ({ order }) => {
 	const handleConfirmModalClose = () => {
 		setOpenModal(false);
 	};
+
+	const handleCancelOrderModalOpen = () => {
+		setCancelOrderModal(true);
+	};
+
+	const handleCancelOrderModalClose = () => {
+		setCancelOrderModal(false);
+	};
+
+	const handleAddPoNumberModalOpen = () => {
+		setAddPoNumberModal(true);
+	};
+
+	const handleAddPoNumberModalClose = () => {
+		setAddPoNumberModal(false);
+	};
+
+	console.log(order);
 
 	return (
 		<div>
@@ -66,15 +88,29 @@ const OrderActions = ({ order }) => {
 				) : null}
 				{/**Cancel order */}
 				{order.status !== "Completed" && order.status !== "Cancelled" ? (
-					<MenuItem>Cancel Order</MenuItem>
+					<MenuItem onClick={handleCancelOrderModalOpen}>Cancel Order</MenuItem>
 				) : null}
 				{/**Add PO# */}
-				{/**Only if order is not in Completed or Cancelled status */}
-				<MenuItem>Add PO#</MenuItem> {/**If applicable */}
+				{order.paymentInformation.purchaseOrder &&
+				order.paymentInformation.purchaseOrderNumber === "" ? (
+					<MenuItem onClick={handleAddPoNumberModalOpen}>Add PO#</MenuItem>
+				) : null}
 			</Menu>
 			<ConfirmOrderModal
 				openModal={openModal}
 				handleClose={handleConfirmModalClose}
+				orderNumber={order.orderNumber}
+				order={order}
+			/>
+			<CancelOrderModal
+				openModal={openCancelOrderModal}
+				handleClose={handleCancelOrderModalClose}
+				orderNumber={order.orderNumber}
+				order={order}
+			/>
+			<AddPoNumberModal
+				openModal={openAddPoNumberModal}
+				handleClose={handleAddPoNumberModalClose}
 				orderNumber={order.orderNumber}
 				order={order}
 			/>
