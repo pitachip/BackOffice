@@ -8,13 +8,15 @@ import MenuItem from "@material-ui/core/MenuItem";
 //app components
 import ConfirmOrderModal from "../order-modals/confirmOrderModal";
 import CancelOrderModal from "../order-modals/cancelOrderModal";
-import AddPoNumberModal from "../order-modals/addPoNumberModal";
+import MarkPaidModal from "../order-modals/markPaidModal";
+import CompleteOrderModal from "../order-modals/completeOrderModal";
 
 const OrderActions = ({ order }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [openModal, setOpenModal] = useState(false);
 	const [openCancelOrderModal, setCancelOrderModal] = useState(false);
-	const [openAddPoNumberModal, setAddPoNumberModal] = useState(false);
+	const [openMarkPaidModal, setMarkPaidModal] = useState(false);
+	const [openCompleteOrderModal, setCompleteOrderModal] = useState(false);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -50,15 +52,21 @@ const OrderActions = ({ order }) => {
 		setCancelOrderModal(false);
 	};
 
-	const handleAddPoNumberModalOpen = () => {
-		setAddPoNumberModal(true);
+	const handleMarkOrderPaidModalOpen = () => {
+		setMarkPaidModal(true);
 	};
 
-	const handleAddPoNumberModalClose = () => {
-		setAddPoNumberModal(false);
+	const handleMarkOrderPaidModalClose = () => {
+		setMarkPaidModal(false);
 	};
 
-	console.log(order);
+	const handleCompleteOrderModalOpen = () => {
+		setCompleteOrderModal(true);
+	};
+
+	const handleCompleteOrderModalClosed = () => {
+		setCompleteOrderModal(false);
+	};
 
 	return (
 		<div>
@@ -80,6 +88,14 @@ const OrderActions = ({ order }) => {
 				{order.status === "Submitted" ? (
 					<MenuItem onClick={handleConfirmModalOpen}>Confirm Order</MenuItem>
 				) : null}
+				{/**Complete Order */}
+				{order.status !== "Submitted" &&
+				order.status !== "Completed" &&
+				order.status !== "Cancelled" ? (
+					<MenuItem onClick={handleCompleteOrderModalOpen}>
+						Complete Order
+					</MenuItem>
+				) : null}
 				{/**View Order */}
 				<MenuItem onClick={handleViewOrder}>View/Print Order</MenuItem>
 				{/**Modify Order */}
@@ -93,7 +109,13 @@ const OrderActions = ({ order }) => {
 				{/**Add PO# */}
 				{order.paymentInformation.purchaseOrder &&
 				order.paymentInformation.purchaseOrderNumber === "" ? (
-					<MenuItem onClick={handleAddPoNumberModalOpen}>Add PO#</MenuItem>
+					<MenuItem onClick={handleModifyOrder}>Add PO#</MenuItem>
+				) : null}
+				{/**Mark Invoice as Paid */}
+				{order.paymentInformation.paymentStatus === "Pending" ? (
+					<MenuItem onClick={handleMarkOrderPaidModalOpen}>
+						Mark as Paid
+					</MenuItem>
 				) : null}
 			</Menu>
 			<ConfirmOrderModal
@@ -108,9 +130,15 @@ const OrderActions = ({ order }) => {
 				orderNumber={order.orderNumber}
 				order={order}
 			/>
-			<AddPoNumberModal
-				openModal={openAddPoNumberModal}
-				handleClose={handleAddPoNumberModalClose}
+			<MarkPaidModal
+				openModal={openMarkPaidModal}
+				handleClose={handleMarkOrderPaidModalClose}
+				orderNumber={order.orderNumber}
+				order={order}
+			/>
+			<CompleteOrderModal
+				openModal={openCompleteOrderModal}
+				handleClose={handleCompleteOrderModalClosed}
 				orderNumber={order.orderNumber}
 				order={order}
 			/>

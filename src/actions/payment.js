@@ -40,7 +40,18 @@ export const voidInvoice = (invoiceId) => async (dispatch) => {
 	}
 };
 
-export const addPurchaseOrderNumber = (invoiceId) => async (dispatch) => {
+export const markInvoiceAsPaid = (invoiceId) => async (dispatch) => {
 	try {
-	} catch (error) {}
+		const userToken = await getUserToken();
+		const markAsPaid = await pitachip.post(
+			`/payment/invoice/${invoiceId}/pay`,
+			{},
+			{
+				headers: { Authorization: `Bearer ${userToken.token}` },
+			}
+		);
+		return markAsPaid;
+	} catch (error) {
+		console.log(error);
+	}
 };

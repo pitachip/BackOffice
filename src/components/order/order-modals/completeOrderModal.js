@@ -9,7 +9,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import TextField from "@material-ui/core/TextField";
 //actions
 import { updateOrder } from "../../../actions";
 
@@ -17,16 +16,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AddPoNumberModal = ({ openModal, handleClose, orderNumber, order }) => {
+const CompleteOrderModal = ({ openModal, handleClose, orderNumber, order }) => {
 	const dispatch = useDispatch();
 
-	const handleAddPoNumber = async () => {
-		/**
-		 * Need to get all the line items from the invoice
-		 * Void the old one
-		 * Create a new one with the PO# set.
-		 * Unfortunately this is the only way to do it once the invoice is finalized.
-		 */
+	const handleCompleteOrder = async () => {
+		order.status = "Completed";
+		await dispatch(updateOrder(order));
 		handleClose();
 	};
 
@@ -37,28 +32,25 @@ const AddPoNumberModal = ({ openModal, handleClose, orderNumber, order }) => {
 				TransitionComponent={Transition}
 				keepMounted
 				onClose={handleClose}
+				aria-labelledby="alert-dialog-slide-title"
+				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogTitle>Add purchse number to order #{orderNumber}?</DialogTitle>
+				<DialogTitle>
+					Are you sure you want to confirm order #{orderNumber}?
+				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
-						Adding purchase order number will automatically update to associated
-						invoice.
+						Completing the order will change its status and notify the customer
+						via email. This order will no longer be able to be modfieid once it
+						is completed.
 					</DialogContentText>
-					<form noValidate autoComplete="off">
-						<TextField
-							id="outlined-basic"
-							label="Purchase Order #"
-							variant="outlined"
-							fullWidth
-						/>
-					</form>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">
-						Cancel
+						No
 					</Button>
-					<Button onClick={handleAddPoNumber} color="primary">
-						Add Purchase Order Number
+					<Button onClick={handleCompleteOrder} color="primary">
+						Complete Order
 					</Button>
 				</DialogActions>
 			</Dialog>
@@ -66,4 +58,4 @@ const AddPoNumberModal = ({ openModal, handleClose, orderNumber, order }) => {
 	);
 };
 
-export default AddPoNumberModal;
+export default CompleteOrderModal;

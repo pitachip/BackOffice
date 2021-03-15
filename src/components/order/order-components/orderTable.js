@@ -68,6 +68,7 @@ const OrderTable = ({
 							<TableCell>Status</TableCell>
 							<TableCell>Total</TableCell>
 							<TableCell>Payment Method</TableCell>
+							<TableCell>Payment Status</TableCell>
 							<TableCell>Delivery Date</TableCell>
 							<TableCell>Delivery Method</TableCell>
 							<TableCell></TableCell>
@@ -91,6 +92,7 @@ const OrderTable = ({
 								<TableCell>
 									{renderPaymentType(order.paymentInformation.paymentType)}
 								</TableCell>
+								<TableCell>{order.paymentInformation.paymentStatus}</TableCell>
 								<TableCell>
 									{renderOrderDate(order.orderDetails.orderDate)}
 								</TableCell>
