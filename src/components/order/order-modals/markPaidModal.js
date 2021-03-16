@@ -10,7 +10,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 //actions
-import { markInvoiceAsPaid, updateOrder } from "../../../actions";
+import { markInvoiceAsPaid } from "../../../actions";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -20,15 +20,11 @@ const MarkPaidModal = ({ openModal, handleClose, orderNumber, order }) => {
 	const dispatch = useDispatch();
 
 	const handleMarkAsPaid = async () => {
-		order.paymentInformation.paymentStatus = "Paid";
 		await dispatch(
-			markInvoiceAsPaid(order.paymentInformation.invoicePaymentDetails.id)
+			markInvoiceAsPaid(order.paymentInformation.invoicePaymentDetails.id, order._id)
 		);
-		await dispatch(updateOrder(order));
 		handleClose();
 	};
-
-	console.log(order);
 
 	return (
 		<div>
