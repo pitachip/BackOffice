@@ -107,7 +107,7 @@ const OrderTable = ({
 			</TableContainer>
 			<TablePagination
 				component="div"
-				count={orderHistory.pagination.totalOrders}
+				count={orderHistory.pagination.totalItems}
 				rowsPerPageOptions={[5, 10, 25]}
 				page={page}
 				rowsPerPage={orderHistory.pagination.limit}

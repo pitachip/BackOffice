@@ -1,10 +1,15 @@
-import React from "react";
-import { Box } from "@material-ui/core";
+//ui components
+import { Box, Typography } from "@material-ui/core";
+//app components
+import UserTable from "./userTable";
 
 const UserContainer = () => {
 	return (
 		<Box>
-			<p>User Container</p>
+			<Typography variant="h4" gutterBottom>
+				Users
+			</Typography>
+			<UserTable />
 		</Box>
 	);
 };
