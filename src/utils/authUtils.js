@@ -9,6 +9,15 @@ export const isAuthorized = async () => {
 	return isAuthorized;
 };
 
+export const isAuthorizedAdmin = async () => {
+	let isAuthorizedAdmin = false;
+	const roles = await auth.currentUser.getIdTokenResult();
+	if (roles.claims.admin) {
+		isAuthorizedAdmin = true;
+	}
+	return isAuthorizedAdmin;
+};
+
 export const getUserToken = async () => {
 	let userToken = { success: false, token: "" };
 	try {

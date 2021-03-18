@@ -1,6 +1,7 @@
 //libs
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import SearchBar from "material-ui-search-bar";
 //ui components
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -10,14 +11,25 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TablePagination from "@material-ui/core/TablePagination";
 import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
+//app components
+import UserActions from "./userActions";
 //actions
-import { getUsers } from "../../../actions";
+import { getUsers, searchForUser } from "../../../actions";
+//styles
+const useStyles = makeStyles((theme) => ({
+	paper: {
+		padding: "10px",
+	},
+}));
 
 const UserTable = () => {
+	const classes = useStyles();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
 	const [page, setPage] = useState(0);
 	const [limit, setLimit] = useState(5);
+	const [searchTerm, setSearchTerm] = useState("");
 
 	useEffect(() => {
 		dispatch(getUsers(page, limit));
@@ -34,16 +46,33 @@ const UserTable = () => {
 		setPage(0);
 	};
 
+	const handleSearchForUser = async () => {
+		setPage(0);
+		if (searchTerm === "") {
+			await dispatch(getUsers(page, limit));
+		} else {
+			await dispatch(searchForUser(searchTerm, 1, limit));
+		}
+	};
+
 	return (
-		<Paper>
+		<Paper className={classes.paper}>
+			<SearchBar
+				value={searchTerm}
+				onChange={(newValue) => setSearchTerm(newValue)}
+				onRequestSearch={() => handleSearchForUser()}
+				onCancelSearch={() => setSearchTerm("")}
+				placeholder="Search for user by email"
+			/>
 			<TableContainer>
 				<Table>
 					<TableHead>
 						<TableRow>
 							<TableCell>Name</TableCell>
 							<TableCell>Email</TableCell>
-							<TableCell>Active</TableCell>
+							<TableCell>Disabled</TableCell>
 							<TableCell>ID</TableCell>
+							<TableCell></TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -51,8 +80,11 @@ const UserTable = () => {
 							<TableRow key={user._id}>
 								<TableCell>{`${user.metaData.firstName} ${user.metaData.lastName}`}</TableCell>
 								<TableCell>{user.metaData.email}</TableCell>
-								<TableCell>{user.active ? "Yes" : "No"}</TableCell>
+								<TableCell>{user.disabled ? "Yes" : "No"}</TableCell>
 								<TableCell>{user.firebaseUserId}</TableCell>
+								<TableCell>
+									<UserActions user={user} />
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
