@@ -39,3 +39,20 @@ export const searchForUser = (email, page, limit) => async (dispatch) => {
 		console.log(error);
 	}
 };
+
+export const getUserRoles = (uid) => async (dispatch) => {
+	try {
+		const userToken = await getUserToken();
+		const user = await pitachip.get(`/auth/roles/${uid}`, {
+			headers: { Authorization: `Bearer ${userToken.token}` },
+		});
+
+		dispatch({ type: "SET_USER_TO_EDIT", payload: user.data });
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const clearUserToEdit = () => (dispatch) => {
+	dispatch({ type: "SET_USER_TO_EDIT", payload: {} });
+};

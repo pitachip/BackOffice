@@ -32,8 +32,10 @@ const UserTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 
 	useEffect(() => {
-		dispatch(getUsers(page, limit));
-	}, []);
+		if (searchTerm === "") {
+			dispatch(getUsers(page, limit));
+		}
+	}, [searchTerm]);
 
 	const handlePageChange = async (event, page) => {
 		await dispatch(getUsers(page + 1, limit));

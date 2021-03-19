@@ -4,6 +4,7 @@ const INITIAL_STATE = {
 		totalItems: 0,
 		limit: 0,
 	},
+	userToEdit: {},
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -14,6 +15,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
 				users: action.payload.users,
 				pagination: action.payload.pagination,
 			};
+		case "SET_USER_TO_EDIT":
+			return { ...state, userToEdit: action.payload };
 		case "persist/PURGE":
 			return INITIAL_STATE;
 		default:
