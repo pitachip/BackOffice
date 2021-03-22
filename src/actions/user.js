@@ -53,6 +53,24 @@ export const getUserRoles = (uid) => async (dispatch) => {
 	}
 };
 
+export const updateUserRoles = (uid, role) => async (dispatch) => {
+	try {
+		const userToken = await getUserToken();
+		const updateUser = await pitachip.put(
+			"/auth/updateroles",
+			{
+				uid: uid,
+				role: role,
+			},
+			{
+				headers: { Authorization: `Bearer ${userToken.token}` },
+			}
+		);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 export const clearUserToEdit = () => (dispatch) => {
 	dispatch({ type: "SET_USER_TO_EDIT", payload: {} });
 };

@@ -1,7 +1,7 @@
 //libs
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { makeStyles } from "@material-ui/core/styles";
+import { isEmpty, each } from "lodash";
 //ui components
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,54 +10,22 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+//app components
+import UserRolesDropdown from "../user-components/userRolesDropdown";
 //actions
-import { getUserRoles, clearUserToEdit } from "../../../actions";
-import { isEmpty } from "lodash";
-//styles
-const useStyles = makeStyles((theme) => ({
-	formControl: {
-		margin: theme.spacing(1),
-		minWidth: 120,
-		maxWidth: 300,
-	},
-	chips: {
-		display: "flex",
-		flexWrap: "wrap",
-	},
-	chip: {
-		margin: 2,
-	},
-	noLabel: {
-		marginTop: theme.spacing(3),
-	},
-}));
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-	PaperProps: {
-		style: {
-			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
-		},
-	},
-};
+import {
+	getUserRoles,
+	clearUserToEdit,
+	updateUserRoles,
+} from "../../../actions";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const roles = ["admin", "manager", "employee", "customer"];
-
 const UpdateUserModal = ({ openModal, handleClose, user }) => {
 	const dispatch = useDispatch();
 	const userToEdit = useSelector((state) => state.user.userToEdit);
-	const classes = useStyles();
 	const [userRoles, setUserRoles] = useState([]);
 
 	useEffect(() => {
@@ -83,8 +51,31 @@ const UpdateUserModal = ({ openModal, handleClose, user }) => {
 		}
 	}, [userToEdit]);
 
-	const handleChange = (event) => {
+	const handleRoleChanged = (event) => {
 		setUserRoles(event.target.value);
+	};
+
+	const updateUserClicked = async () => {
+		let customClaims = {
+			customer: false,
+			employee: false,
+			manager: false,
+			admin: false,
+		};
+
+		each(userRoles, (role) => {
+			if (role === "customer") {
+				customClaims.customer = true;
+			} else if (role === "employee") {
+				customClaims.employee = true;
+			} else if (role === "manager") {
+				customClaims.manager = true;
+			} else if (role === "admin") {
+				customClaims.admin = true;
+			}
+		});
+		await dispatch(updateUserRoles(userToEdit.uid, customClaims));
+		handleClose();
 	};
 
 	return (
@@ -98,28 +89,18 @@ const UpdateUserModal = ({ openModal, handleClose, user }) => {
 				<DialogTitle>{`Modifying ${user.metaData.firstName} ${user.metaData.lastName}'s permissions`}</DialogTitle>
 				<DialogContent>
 					<DialogContentText>Update this user's permissions.</DialogContentText>
-					<FormControl className={classes.formControl}>
-						<InputLabel>User Roles</InputLabel>
-						<Select
-							multiple
-							value={userRoles}
-							onChange={handleChange}
-							input={<Input />}
-							MenuProps={MenuProps}
-						>
-							{roles.map((role) => (
-								<MenuItem key={role} value={role}>
-									{role}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
+					<UserRolesDropdown
+						userRoles={userRoles}
+						handleChange={handleRoleChanged}
+					/>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">
 						Cancel
 					</Button>
-					<Button color="primary">Update User</Button>
+					<Button color="primary" onClick={updateUserClicked}>
+						Update User
+					</Button>
 				</DialogActions>
 			</Dialog>
 		</div>

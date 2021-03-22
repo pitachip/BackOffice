@@ -14,6 +14,7 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 //app components
 import UserActions from "./userActions";
+import AddUserButton from "./addUserButton";
 //actions
 import { getUsers, searchForUser } from "../../../actions";
 //styles
@@ -59,6 +60,7 @@ const UserTable = () => {
 
 	return (
 		<Paper className={classes.paper}>
+			<AddUserButton />
 			<SearchBar
 				value={searchTerm}
 				onChange={(newValue) => setSearchTerm(newValue)}

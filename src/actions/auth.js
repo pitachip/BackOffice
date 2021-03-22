@@ -18,9 +18,12 @@ export const signInWithEmailAndPassword = (email, password) => async (
 
 		if (signInAttempt && userAuthorized) {
 			const userToken = await getUserToken();
-			const userMetaData = await pitachip.get(`/user/${signInAttempt.user.uid}`, {
-				headers: { Authorization: `Bearer ${userToken.token}` },
-			});
+			const userMetaData = await pitachip.get(
+				`/user/${signInAttempt.user.uid}`,
+				{
+					headers: { Authorization: `Bearer ${userToken.token}` },
+				}
+			);
 			metaData = userMetaData.data[0].metaData;
 			dispatch({
 				type: "SET_USER",
