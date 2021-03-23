@@ -5,9 +5,9 @@ const INITIAL_STATE = {
 		lastName: "",
 	},
 	authLoading: true,
-	authForm: "",
 	showAuthMessage: false,
 	authMessage: "",
+	severity: "success",
 };
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -26,6 +26,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
 				...state,
 				authMessage: action.payload.message,
 				showAuthMessage: action.payload.showAuthMessage,
+				severity: action.payload.severity,
 			};
 		default:
 			return state;

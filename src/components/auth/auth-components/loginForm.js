@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -15,6 +14,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CircularProgress from "@material-ui/core/CircularProgress";
 //app components
 import Alert from "../../common/alert";
+import ForgotPasswordModal from "../auth-modals/forgotPasswordModal";
 //actions
 import { signInWithEmailAndPassword, closeAuthMessage } from "../../../actions";
 
@@ -53,6 +53,7 @@ const LoginForm = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [signingIn, setSigningIn] = useState(false);
+	const [openForgotPasswordModal, setOpenForgotPasswordModal] = useState(false);
 
 	const signInButtonClicked = async (e) => {
 		e.preventDefault();
@@ -63,6 +64,14 @@ const LoginForm = () => {
 
 	const closeAlert = () => {
 		dispatch(closeAuthMessage());
+	};
+
+	const handleCloseForgotPasswordModal = () => {
+		setOpenForgotPasswordModal(false);
+	};
+
+	const handleOpenForgotPasswordModal = () => {
+		setOpenForgotPasswordModal(true);
 	};
 
 	const renderSignInButton = () => {
@@ -130,9 +139,9 @@ const LoginForm = () => {
 					{!signingIn ? renderSignInButton() : renderLoader()}
 					<Grid container>
 						<Grid item xs>
-							<Link href="#" variant="body2">
-								Forgot password?
-							</Link>
+							<Button color="primary" onClick={handleOpenForgotPasswordModal}>
+								Forgot Password?
+							</Button>
 						</Grid>
 					</Grid>
 				</form>
@@ -141,11 +150,15 @@ const LoginForm = () => {
 					onClose={closeAlert}
 					anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
 				>
-					<Alert onClose={closeAlert} severity="error">
+					<Alert onClose={closeAlert} severity={auth.severity}>
 						{auth.authMessage}
 					</Alert>
 				</Snackbar>
 			</div>
+			<ForgotPasswordModal
+				openModal={openForgotPasswordModal}
+				handleClose={handleCloseForgotPasswordModal}
+			/>
 		</Container>
 	);
 };

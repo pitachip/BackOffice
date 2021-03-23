@@ -43,6 +43,7 @@ export const signInWithEmailAndPassword = (email, password) => async (
 				payload: {
 					message: "Not Authorized",
 					showAuthMessage: true,
+					severity: "error",
 				},
 			});
 		}
@@ -54,6 +55,7 @@ export const signInWithEmailAndPassword = (email, password) => async (
 			payload: {
 				message: errorMessage,
 				showAuthMessage: true,
+				severity: "error",
 			},
 		});
 	}
@@ -101,12 +103,50 @@ export const authStateChanged = (user) => async (dispatch) => {
 	}
 };
 
+export const sendPasswordResetEmail = (email) => async (dispatch) => {
+	try {
+		const response = await pitachip.post("/auth/resetpassword", {
+			email,
+		});
+
+		dispatch({
+			type: "SET_AUTH_MESSAGE",
+			payload: {
+				message: response.data,
+				showAuthMessage: true,
+				severity: "success",
+			},
+		});
+	} catch (error) {
+		if (error.includes("EMAIL_NOT_FOUND")) {
+			dispatch({
+				type: "SET_AUTH_MESSAGE",
+				payload: {
+					message: "No account exists with this email",
+					showAuthMessage: true,
+					severity: "error",
+				},
+			});
+		} else {
+			dispatch({
+				type: "SET_AUTH_MESSAGE",
+				payload: {
+					message: error,
+					showAuthMessage: true,
+					severity: "error",
+				},
+			});
+		}
+	}
+};
+
 export const closeAuthMessage = () => (dispatch) => {
 	dispatch({
 		type: "SET_AUTH_MESSAGE",
 		payload: {
 			message: "",
 			showAuthMessage: false,
+			severity: "",
 		},
 	});
 };

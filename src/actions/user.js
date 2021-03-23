@@ -1,5 +1,6 @@
 import pitachip from "../apis/pitachip";
 import { getUserToken } from "../utils/authUtils";
+import { formatRoles } from "../utils/userUtils";
 
 export const getUsers = (page, limit) => async (dispatch) => {
 	try {
@@ -53,13 +54,37 @@ export const getUserRoles = (uid) => async (dispatch) => {
 	}
 };
 
-export const updateUserRoles = (uid, role) => async (dispatch) => {
+export const updateUserRoles = (uid, role, disabled) => async (dispatch) => {
 	try {
+		console.log(disabled);
 		const userToken = await getUserToken();
 		const updateUser = await pitachip.put(
 			"/auth/updateroles",
 			{
 				uid: uid,
+				role: role,
+				disabled: disabled,
+			},
+			{
+				headers: { Authorization: `Bearer ${userToken.token}` },
+			}
+		);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const addNewUser = (newUser) => async (dispatch) => {
+	try {
+		const userToken = await getUserToken();
+		const role = formatRoles(newUser.userRoles);
+		await pitachip.post(
+			"/auth/register",
+			{
+				firstName: newUser.firstName,
+				lastName: newUser.lastName,
+				password: newUser.password,
+				email: newUser.email,
 				role: role,
 			},
 			{

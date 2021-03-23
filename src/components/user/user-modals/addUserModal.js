@@ -13,7 +13,7 @@ import Slide from "@material-ui/core/Slide";
 //app components
 import UserRolesDropdown from "../user-components/userRolesDropdown";
 //actions
-import {} from "../../../actions";
+import { addNewUser } from "../../../actions";
 //styles
 const useStyles = makeStyles((theme) => ({
 	form: {
@@ -34,12 +34,6 @@ const AddUserModal = ({ openModal, handleClose }) => {
 		password: "",
 		userRoles: [],
 	});
-	/**
-	 * TODO
-	 * get the roles
-	 * save new user
-	 * reload the table
-	 */
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
@@ -47,9 +41,10 @@ const AddUserModal = ({ openModal, handleClose }) => {
 		setNewUserFields({ ...newUserFields, userRoles: event.target.value });
 	};
 
-	const handleCreateNewUser = (e) => {
+	const handleCreateNewUser = async (e) => {
 		e.preventDefault();
-		console.log("Create new user clicked: ", newUserFields);
+		await dispatch(addNewUser(newUserFields));
+		handleClose();
 	};
 	return (
 		<div>

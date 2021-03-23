@@ -42,8 +42,7 @@ const UserActions = ({ user }) => {
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				transformOrigin={{ vertical: "top", horizontal: "center" }}
 			>
-				<MenuItem onClick={handleUpdateUserModalOpen}>Update Roles</MenuItem>
-				<MenuItem disabled>Disable User</MenuItem>
+				<MenuItem onClick={handleUpdateUserModalOpen}>Update User</MenuItem>
 			</Menu>
 			<UpdateUserModal
 				openModal={openUpdateUserModal}

@@ -12,6 +12,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 //app components
 import UserRolesDropdown from "../user-components/userRolesDropdown";
+import ToggleUserAccess from "../user-components/toggleUserAccess";
 //actions
 import {
 	getUserRoles,
@@ -27,6 +28,7 @@ const UpdateUserModal = ({ openModal, handleClose, user }) => {
 	const dispatch = useDispatch();
 	const userToEdit = useSelector((state) => state.user.userToEdit);
 	const [userRoles, setUserRoles] = useState([]);
+	const [userDisabled, setUserDisabled] = useState("");
 
 	useEffect(() => {
 		if (openModal) {
@@ -48,11 +50,16 @@ const UpdateUserModal = ({ openModal, handleClose, user }) => {
 				}
 			}
 			setUserRoles(roleArray);
+			setUserDisabled(userToEdit.disabled ? "Yes" : "No");
 		}
 	}, [userToEdit]);
 
 	const handleRoleChanged = (event) => {
 		setUserRoles(event.target.value);
+	};
+
+	const handleToggleChange = (event) => {
+		setUserDisabled(event.target.value);
 	};
 
 	const updateUserClicked = async () => {
@@ -74,7 +81,13 @@ const UpdateUserModal = ({ openModal, handleClose, user }) => {
 				customClaims.admin = true;
 			}
 		});
-		await dispatch(updateUserRoles(userToEdit.uid, customClaims));
+		await dispatch(
+			updateUserRoles(
+				userToEdit.uid,
+				customClaims,
+				userDisabled === "Yes" ? true : false
+			)
+		);
 		handleClose();
 	};
 
@@ -86,12 +99,16 @@ const UpdateUserModal = ({ openModal, handleClose, user }) => {
 				keepMounted
 				onClose={handleClose}
 			>
-				<DialogTitle>{`Modifying ${user.metaData.firstName} ${user.metaData.lastName}'s permissions`}</DialogTitle>
+				<DialogTitle>{`Modifying ${user.metaData.firstName} ${user.metaData.lastName}'s attributes`}</DialogTitle>
 				<DialogContent>
 					<DialogContentText>Update this user's permissions.</DialogContentText>
 					<UserRolesDropdown
 						userRoles={userRoles}
 						handleChange={handleRoleChanged}
+					/>
+					<ToggleUserAccess
+						disabled={userDisabled}
+						handleChange={handleToggleChange}
 					/>
 				</DialogContent>
 				<DialogActions>

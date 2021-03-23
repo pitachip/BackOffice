@@ -13,16 +13,6 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: 120,
 		maxWidth: 300,
 	},
-	chips: {
-		display: "flex",
-		flexWrap: "wrap",
-	},
-	chip: {
-		margin: 2,
-	},
-	noLabel: {
-		marginTop: theme.spacing(3),
-	},
 }));
 
 const ITEM_HEIGHT = 48;
@@ -42,7 +32,7 @@ const UserRolesDropdown = ({ userRoles, handleChange }) => {
 	const classes = useStyles();
 
 	return (
-		<FormControl className={classes.formControl}>
+		<FormControl className={classes.formControl} fullWidth>
 			<InputLabel>User Roles</InputLabel>
 			<Select
 				multiple
