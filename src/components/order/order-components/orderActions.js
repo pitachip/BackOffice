@@ -10,6 +10,7 @@ import ConfirmOrderModal from "../order-modals/confirmOrderModal";
 import CancelOrderModal from "../order-modals/cancelOrderModal";
 import MarkPaidModal from "../order-modals/markPaidModal";
 import CompleteOrderModal from "../order-modals/completeOrderModal";
+import FulfillmentDetailsModal from "../order-modals/fulfillmentDetailsModal";
 
 const OrderActions = ({ order }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -17,6 +18,9 @@ const OrderActions = ({ order }) => {
 	const [openCancelOrderModal, setCancelOrderModal] = useState(false);
 	const [openMarkPaidModal, setMarkPaidModal] = useState(false);
 	const [openCompleteOrderModal, setCompleteOrderModal] = useState(false);
+	const [openFulfillmentDetailsModal, setFulfillmentDetailsModal] = useState(
+		false
+	);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -68,6 +72,14 @@ const OrderActions = ({ order }) => {
 		setCompleteOrderModal(false);
 	};
 
+	const handleFulfillmentDetailsModalOpen = () => {
+		setFulfillmentDetailsModal(true);
+	};
+
+	const handleFulfillmentDetailsModalClosed = () => {
+		setFulfillmentDetailsModal(false);
+	};
+
 	return (
 		<div>
 			<Button
@@ -111,6 +123,12 @@ const OrderActions = ({ order }) => {
 				order.paymentInformation.purchaseOrderNumber === "" ? (
 					<MenuItem onClick={handleModifyOrder}>Add PO#</MenuItem>
 				) : null}
+				{/**Update Fulfillment Details */}
+				{order.status !== "Completed" && order.status !== "Cancelled" ? (
+					<MenuItem onClick={handleFulfillmentDetailsModalOpen}>
+						Update Fulfillment Details
+					</MenuItem>
+				) : null}
 				{/**Mark Invoice as Paid */}
 				{order.paymentInformation.paymentStatus === "Pending" ? (
 					<MenuItem onClick={handleMarkOrderPaidModalOpen}>
@@ -139,6 +157,12 @@ const OrderActions = ({ order }) => {
 			<CompleteOrderModal
 				openModal={openCompleteOrderModal}
 				handleClose={handleCompleteOrderModalClosed}
+				orderNumber={order.orderNumber}
+				order={order}
+			/>
+			<FulfillmentDetailsModal
+				openModal={openFulfillmentDetailsModal}
+				handleClose={handleFulfillmentDetailsModalClosed}
 				orderNumber={order.orderNumber}
 				order={order}
 			/>

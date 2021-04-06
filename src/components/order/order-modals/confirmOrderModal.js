@@ -21,7 +21,7 @@ const ConfirmOrderModal = ({ openModal, handleClose, orderNumber, order }) => {
 
 	const handleConfirmOrder = async () => {
 		order.status = "Confirmed";
-		await dispatch(updateOrder(order));
+		await dispatch(updateOrder(order, true));
 		handleClose();
 	};
 

@@ -21,7 +21,7 @@ const CompleteOrderModal = ({ openModal, handleClose, orderNumber, order }) => {
 
 	const handleCompleteOrder = async () => {
 		order.status = "Completed";
-		await dispatch(updateOrder(order));
+		await dispatch(updateOrder(order, true));
 		handleClose();
 	};
 
