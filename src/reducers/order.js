@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
 	orders: [],
 	pagination: {},
+	locations: [],
 };
 
 const orderReducer = (state = INITIAL_STATE, action) => {
@@ -11,6 +12,8 @@ const orderReducer = (state = INITIAL_STATE, action) => {
 				orders: action.payload.orders,
 				pagination: action.payload.pagination,
 			};
+		case "SET_STORE_INFORMATION":
+			return { ...state, locations: action.payload };
 		case "persist/PURGE":
 			return INITIAL_STATE;
 		default:

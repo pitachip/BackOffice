@@ -1,5 +1,6 @@
 import pitachip from "../apis/pitachip";
 import { getUserToken } from "../utils/authUtils";
+import filter from "lodash/filter";
 
 export const getOrders = (page, filter, limit) => async (dispatch) => {
 	try {
@@ -9,7 +10,7 @@ export const getOrders = (page, filter, limit) => async (dispatch) => {
 		}
 		const userToken = await getUserToken();
 		const orderHistory = await pitachip.get(
-			`/specialorder?sort=-createdAt&page=${page}&${queryFilter}&limit=${limit}`,
+			`/specialorder?sort=orderDetails.orderDate&page=${page}&${queryFilter}&limit=${limit}`,
 			{
 				headers: { Authorization: `Bearer ${userToken.token}` },
 			}
@@ -26,13 +27,14 @@ export const getOrders = (page, filter, limit) => async (dispatch) => {
 	}
 };
 
-export const updateOrder = (order) => async (dispatch) => {
+export const updateOrder = (order, sendEmail) => async (dispatch) => {
 	try {
 		const userToken = await getUserToken();
 		const modifySpecialOrder = await pitachip.put(
 			`/specialorder/${order._id}`,
 			{
 				modifiedOrder: order,
+				sendEmail,
 			},
 			{
 				headers: { Authorization: `Bearer ${userToken.token}` },
@@ -62,4 +64,10 @@ export const cancelOrder = (orderId, paymentStatus) => async (dispatch) => {
 	} catch (error) {
 		return error;
 	}
+};
+
+export const getStoreInformation = () => async (dispatch) => {
+	let response = await pitachip.get("/config");
+	response = filter(response.data, { type: "storeInformation" });
+	dispatch({ type: "SET_STORE_INFORMATION", payload: response[0].locations });
 };
