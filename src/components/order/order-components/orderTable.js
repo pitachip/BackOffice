@@ -18,10 +18,25 @@ const useStyles = makeStyles({
 	poWarning: {
 		color: "red",
 		margin: 0,
+		fontSize: 12,
 	},
 	descriptionText: {
 		color: "darkGrey",
 		margin: 0,
+		fontSize: 12,
+		overflowWrap: "anywhere",
+	},
+	sticky: {
+		position: "sticky",
+		left: 0,
+		backgroundColor: "white",
+		zIndex: 1,
+	},
+	stickyRight: {
+		position: "sticky",
+		right: 0,
+		backgroundColor: "white",
+		zIndex: 2,
 	},
 });
 
@@ -52,7 +67,7 @@ const OrderTable = ({
 		if (paymentInformation.purchaseOrder) {
 			if (paymentInformation.purchaseOrderNumber !== "") {
 				return (
-					<p className={classes.descriptionText}>
+					<p nowrap className={classes.descriptionText}>
 						#{paymentInformation.purchaseOrderNumber}
 					</p>
 				);
@@ -67,14 +82,8 @@ const OrderTable = ({
 	};
 
 	const renderDeliveryAddress = (deliveryInformation) => {
-		const {
-			address1,
-			address2,
-			city,
-			state,
-			zip,
-			deliveryInstructions,
-		} = deliveryInformation;
+		const { address1, address2, city, state, zip, deliveryInstructions } =
+			deliveryInformation;
 		return (
 			<>
 				<p className={classes.descriptionText}>
@@ -121,37 +130,55 @@ const OrderTable = ({
 	return (
 		<>
 			<TableContainer className={classes.table} component={Paper}>
-				<Table style={{ width: "3000px", tableLayout: "auto" }}>
+				<Table style={{ minWidth: 2000 }}>
 					<TableHead>
 						<TableRow>
-							<TableCell>Order #</TableCell>
-							<TableCell>Delivery Date</TableCell>
+							<TableCell className={classes.sticky}>Delivery Date</TableCell>
+							<TableCell className={classes.sticky} style={{ left: 190 }}>
+								Order
+							</TableCell>
+							<TableCell className={classes.sticky} style={{ left: 260 }}>
+								Customer
+							</TableCell>
+							<TableCell>Delivery Method</TableCell>
 							<TableCell>Status</TableCell>
-							<TableCell>Customer</TableCell>
 							<TableCell>Payment Method</TableCell>
 							<TableCell>Payment Status</TableCell>
-							<TableCell>Number of Items</TableCell>
-							<TableCell>Delivery Method</TableCell>
+							<TableCell># Items</TableCell>
 							<TableCell>Pick Up</TableCell>
 							<TableCell>Drop Off</TableCell>
 							<TableCell>Fulfilled By</TableCell>
 							<TableCell>Delivered By</TableCell>
-							<TableCell></TableCell>
+							<TableCell className={classes.stickyRight}></TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{orderHistory.orders.map((order) => (
 							<TableRow key={order._id}>
-								<TableCell width="1%">#{order.orderNumber}</TableCell>
-								<TableCell width="5%">
+								<TableCell className={classes.sticky}>
 									{renderOrderDate(order.orderDetails.orderDate)}
 								</TableCell>
-								<TableCell width="2%">{order.status}</TableCell>
-								<TableCell width="5%">
+								<TableCell className={classes.sticky} style={{ left: 190 }}>
+									#{order.orderNumber}
+								</TableCell>
+								<TableCell className={classes.sticky} style={{ left: 260 }}>
 									{order.customerInformation.firstName}{" "}
 									{order.customerInformation.lastName}
 								</TableCell>
-								<TableCell width="5%">
+								<TableCell>
+									<Grid container>
+										<Grid item xs={12}>
+											{order.orderDetails.shippingMethod}
+										</Grid>
+										<Grid item xs={12}>
+											{order.orderDetails.shippingMethod === "pickup"
+												? renderPickupLocation(order.orderDetails)
+												: renderDeliveryAddress(order.deliveryInformation)}
+										</Grid>
+									</Grid>
+								</TableCell>
+								<TableCell>{order.status}</TableCell>
+								<TableCell>
 									<Grid container>
 										<Grid item xs={12}>
 											{renderPaymentType(
@@ -164,37 +191,17 @@ const OrderTable = ({
 										</Grid>
 									</Grid>
 								</TableCell>
-								<TableCell width="2%">
-									{order.paymentInformation.paymentStatus}
-								</TableCell>
-								<TableCell width="2%">
-									{renderNumberOfItems(order.orderItems)}
-								</TableCell>
-								<TableCell width="5%">
-									<Grid container>
-										<Grid item xs={12}>
-											{order.orderDetails.shippingMethod}
-										</Grid>
-										<Grid item xs={12}>
-											{order.orderDetails.shippingMethod === "pickup"
-												? renderPickupLocation(order.orderDetails)
-												: renderDeliveryAddress(order.deliveryInformation)}
-										</Grid>
-									</Grid>
-								</TableCell>
-								<TableCell width="2%">
+								<TableCell>{order.paymentInformation.paymentStatus}</TableCell>
+								<TableCell>{renderNumberOfItems(order.orderItems)}</TableCell>
+								<TableCell>
 									{renderPickUpTime(order.orderDetails.orderDate)}
 								</TableCell>
-								<TableCell width="2%">
+								<TableCell>
 									{renderDropOffTime(order.orderDetails.orderDate)}
 								</TableCell>
-								<TableCell width="3%">
-									{order.orderDetails.fulfilledBy}
-								</TableCell>
-								<TableCell width="3%">
-									{order.orderDetails.deliveredBy}
-								</TableCell>
-								<TableCell width="2%">
+								<TableCell>{order.orderDetails.fulfilledBy}</TableCell>
+								<TableCell>{order.orderDetails.deliveredBy}</TableCell>
+								<TableCell className={classes.stickyRight}>
 									<OrderActions order={order} />
 								</TableCell>
 							</TableRow>

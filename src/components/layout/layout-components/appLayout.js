@@ -11,6 +11,7 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Container from "@material-ui/core/Container";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import Grid from "@material-ui/core/Grid";
 //app components
 import SideBar from "./sidebar";
 import NavBar from "./navbar";
@@ -57,8 +58,8 @@ const useStyles = makeStyles((theme) => ({
 		overflow: "auto",
 	},
 	container: {
-		paddingTop: theme.spacing(4),
-		paddingBottom: theme.spacing(4),
+		paddingTop: theme.spacing(2),
+		paddingBottom: theme.spacing(2),
 	},
 	paper: {
 		padding: theme.spacing(2),
@@ -103,7 +104,7 @@ const AppLayout = () => {
 			</Drawer>
 			<main className={classes.content}>
 				<div className={classes.appBarSpacer} />
-				<Container maxWidth="lg" className={classes.container}>
+				<Container maxWidth="xl" className={classes.container}>
 					<Switch>
 						<Route path="/orders" exact component={OrderContainer} />
 						<Route path="/users" exact component={UserContainer} />

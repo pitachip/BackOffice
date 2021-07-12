@@ -41,30 +41,46 @@ const StatusTabs = () => {
 					indicatorColor="primary"
 					textColor="primary"
 				>
-					<Tab label="All" />
 					<Tab label="Submitted" />
 					<Tab label="In Progress" />
 					<Tab label="Completed" />
 					<Tab label="Cancelled" />
+					<Tab label="All" />
 				</Tabs>
-				<TabPanel value={value} index={0} querystring="">
-					All Orders
-				</TabPanel>
-				<TabPanel value={value} index={1} querystring="status=Submitted">
+				<TabPanel
+					value={value}
+					index={0}
+					querystring="status=Submitted&sort=orderDetails.orderDate"
+				>
 					Submitted Orders
 				</TabPanel>
 				<TabPanel
 					value={value}
-					index={2}
-					querystring="status=Confirmed&status=Scheduled For Delivery"
+					index={1}
+					querystring="status=Confirmed&status=Scheduled For Delivery&sort=orderDetails.orderDate"
 				>
 					In Progress Orders
 				</TabPanel>
-				<TabPanel value={value} index={3} querystring="status=Completed">
+				<TabPanel
+					value={value}
+					index={2}
+					querystring="status=Completed&sort=-orderDetails.orderDate"
+				>
 					Completed Order
 				</TabPanel>
-				<TabPanel value={value} index={4} querystring="status=Cancelled">
+				<TabPanel
+					value={value}
+					index={3}
+					querystring="status=Cancelled&sort=-orderDetails.orderDate"
+				>
 					Cancelled Orders
+				</TabPanel>
+				<TabPanel
+					value={value}
+					index={4}
+					querystring="&sort=-orderDetails.orderDate"
+				>
+					All Orders
 				</TabPanel>
 			</Paper>
 		</div>
