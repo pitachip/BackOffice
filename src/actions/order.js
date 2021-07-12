@@ -10,7 +10,7 @@ export const getOrders = (page, filter, limit) => async (dispatch) => {
 		}
 		const userToken = await getUserToken();
 		const orderHistory = await pitachip.get(
-			`/specialorder?sort=orderDetails.orderDate&page=${page}&${queryFilter}&limit=${limit}`,
+			`/specialorder?page=${page}&${queryFilter}&limit=${limit}`,
 			{
 				headers: { Authorization: `Bearer ${userToken.token}` },
 			}

@@ -1,5 +1,5 @@
 //ui components
-import { Box } from "@material-ui/core";
+import { Grid, Box } from "@material-ui/core";
 //app components
 import StatusTabs from "./statusTabs";
 
