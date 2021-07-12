@@ -140,7 +140,7 @@ const OrderTable = ({
 							<TableCell className={classes.sticky} style={{ left: 260 }}>
 								Customer
 							</TableCell>
-							<TableCell>Delivery Method</TableCell>
+							<TableCell width="20%">Delivery Method</TableCell>
 							<TableCell>Status</TableCell>
 							<TableCell>Payment Method</TableCell>
 							<TableCell>Payment Status</TableCell>
@@ -165,7 +165,7 @@ const OrderTable = ({
 									{order.customerInformation.firstName}{" "}
 									{order.customerInformation.lastName}
 								</TableCell>
-								<TableCell>
+								<TableCell width="20%">
 									<Grid container>
 										<Grid item xs={12}>
 											{order.orderDetails.shippingMethod}
